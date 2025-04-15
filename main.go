@@ -9,7 +9,6 @@ import (
 	"math"
 	"net/http"
 	"os"
-	"strings"
 	"time"
 
 	"gopkg.in/yaml.v3"
@@ -30,51 +29,59 @@ type DomainStats struct {
 
 var stats = make(map[string]*DomainStats)
 
-func checkHealth(endpoint Endpoint) {
-	var client = &http.Client{}
-
-	bodyBytes, err := json.Marshal(endpoint)
+func (c *Endpoint) IsUp(ds *DomainStats) bool {
+	bodyBytes, err := json.Marshal(c)
 	if err != nil {
-		return
+		log.Fatal("invalid body")
 	}
 	reqBody := bytes.NewReader(bodyBytes)
 
-	req, err := http.NewRequest(endpoint.Method, endpoint.URL, reqBody)
+	method := c.Method
+	if method == "" {
+		method = "GET"
+	}
+
+	req, err := http.NewRequest(method, c.URL, reqBody)
 	if err != nil {
-		log.Println("Error creating request:", err)
-		return
+		return false
 	}
 
-	for key, value := range endpoint.Headers {
-		req.Header.Set(key, value)
+	for k, v := range c.Headers {
+		req.Header.Set(k, v)
 	}
 
+	client := http.Client{
+		Timeout: 5 * time.Second,
+	}
+
+	start := time.Now()
 	resp, err := client.Do(req)
-	domain := extractDomain(endpoint.URL)
+	duration := time.Since(start)
+	ds.Total++
+	ms := float64(duration.Milliseconds())
 
-	stats[domain].Total++
-	if err == nil && resp.StatusCode >= 200 && resp.StatusCode < 300 {
-		stats[domain].Success++
+	if err == nil && ms < 500 && resp.StatusCode >= 200 && resp.StatusCode < 300 {
+		ds.Success++
+		return true
 	}
-}
-
-func extractDomain(url string) string {
-	urlSplit := strings.Split(url, "//")
-	domain := strings.Split(urlSplit[len(urlSplit)-1], "/")[0]
-	return domain
+	defer resp.Body.Close()
+	return false
 }
 
 func monitorEndpoints(endpoints []Endpoint) {
 	for _, endpoint := range endpoints {
-		domain := extractDomain(endpoint.URL)
-		if stats[domain] == nil {
-			stats[domain] = &DomainStats{}
+		if stats[endpoint.URL] == nil {
+			stats[endpoint.URL] = &DomainStats{}
 		}
 	}
 
 	for {
 		for _, endpoint := range endpoints {
-			checkHealth(endpoint)
+			if endpoint.IsUp(stats[endpoint.URL]) {
+				fmt.Printf("%s is UP\n", endpoint.Name)
+			} else {
+				fmt.Printf("%s is DOWN\n", endpoint.Name)
+			}
 		}
 		logResults()
 		time.Sleep(15 * time.Second)
