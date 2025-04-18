@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
-	"math"
 	"net/http"
 	"os"
 	"time"
@@ -22,15 +21,27 @@ type Endpoint struct {
 	Body    string            `yaml:"body"`
 }
 
-type DomainStats struct {
+type Stats struct {
 	Success int
 	Total   int
+	URL     string
 }
 
-var stats = make(map[string]*DomainStats)
+func (s *Stats) UptimePercentage() float64 {
+	return (float64(s.Success) / float64(s.Total)) * 100
 
-func (c *Endpoint) IsUp(ds *DomainStats) bool {
-	bodyBytes, err := json.Marshal(c)
+}
+
+func (s *Stats) logResults() {
+	percentage := s.UptimePercentage()
+	fmt.Printf("%s has %f%% availability\n", s.URL, percentage)
+}
+
+func (c *Endpoint) IsUp(ds *Stats) bool {
+	if c.URL != ds.URL {
+		log.Fatalf("expected %s got stats for %s\n", c.URL, ds.URL)
+	}
+	bodyBytes, err := json.Marshal(c.Body)
 	if err != nil {
 		log.Fatal("invalid body")
 	}
@@ -69,29 +80,25 @@ func (c *Endpoint) IsUp(ds *DomainStats) bool {
 }
 
 func monitorEndpoints(endpoints []Endpoint) {
+	var statz = make(map[string]*Stats)
 	for _, endpoint := range endpoints {
-		if stats[endpoint.URL] == nil {
-			stats[endpoint.URL] = &DomainStats{}
+		if statz[endpoint.URL] == nil {
+			statz[endpoint.URL] = &Stats{URL: endpoint.URL}
 		}
 	}
 
 	for {
 		for _, endpoint := range endpoints {
-			if endpoint.IsUp(stats[endpoint.URL]) {
+			stat := statz[endpoint.URL]
+			if endpoint.IsUp(stat) {
 				fmt.Printf("%s is UP\n", endpoint.Name)
 			} else {
 				fmt.Printf("%s is DOWN\n", endpoint.Name)
 			}
+			stat.logResults()
 		}
-		logResults()
-		time.Sleep(15 * time.Second)
-	}
-}
 
-func logResults() {
-	for domain, stat := range stats {
-		percentage := int(math.Round(100 * float64(stat.Success) / float64(stat.Total)))
-		fmt.Printf("%s has %d%% availability\n", domain, percentage)
+		//time.Sleep(15 * time.Second)
 	}
 }
 
