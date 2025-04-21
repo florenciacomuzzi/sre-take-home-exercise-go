@@ -1,30 +1,47 @@
 services:
-  go-server-20:
-    build:
-      context: .
-      dockerfile: util.Dockerfile
-    ports:
-      - "8080:8080"
+  mytelemetry:
+    image: mongodb/mongodb-community-server:6.0-ubi8
     environment:
-      - FAILURE_RATE=0.2
-      - PORT=8080
+      - CONN_STR=mongodb://user:pass@mongodb
+    command: '/bin/bash -c "sleep 5; mongosh $$CONN_STR --eval \"show dbs;\""'
+    depends_on:
+      - mongodb
+  mongodb:
+    image: mongodb/mongodb-community-server:6.0-ubi8
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=user
+      - MONGO_INITDB_ROOT_PASSWORD=pass
+    volumes:
+      - type: bind
+        source: ./data
+        target: /data/db
 
-  go-server-50:
-    build:
-      context: .
-      dockerfile: util.Dockerfile
-    ports:
-      - "8081:8081"
-    environment:
-      - FAILURE_RATE=0.5
-      - PORT=8081
-
-  go-server-80:
-    build:
-      context: .
-      dockerfile: util.Dockerfile
-    ports:
-      - "8082:8082"
-    environment:
-      - FAILURE_RATE=0.8
-      - PORT=8082
+#  go-server-20:
+#    build:
+#      context: .
+#      dockerfile: util.Dockerfile
+#    ports:
+#      - "8080:8080"
+#    environment:
+#      - FAILURE_RATE=0.2
+#      - PORT=8080
+#
+#  go-server-50:
+#    build:
+#      context: .
+#      dockerfile: util.Dockerfile
+#    ports:
+#      - "8081:8081"
+#    environment:
+#      - FAILURE_RATE=0.5
+#      - PORT=8081
+#
+#  go-server-80:
+#    build:
+#      context: .
+#      dockerfile: util.Dockerfile
+#    ports:
+#      - "8082:8082"
+#    environment:
+#      - FAILURE_RATE=0.8
+#      - PORT=8082
