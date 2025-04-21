@@ -25,14 +25,14 @@
 #    content-type: application/json
 #  method: POST
 - name: local POST down
-  url: http://localhost:8080
+  url: http://localhost:5000
   body: '{"foo":"bar"}'
   headers:
     content-type: application/json
   method: POST
-- name: local GET down
-  url: http://localhost:8080
-  body: '{"foo":"bar"}'
-  headers:
-    content-type: application/json
-  method: POST
+#- name: local GET down
+#  url: http://localhost:8080
+#  body: '{"foo":"bar"}'
+#  headers:
+#    content-type: application/json
+#  method: POST

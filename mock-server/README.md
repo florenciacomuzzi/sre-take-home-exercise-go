@@ -9,6 +9,9 @@ A Flask-based mock server that logs HTTP requests to MongoDB.
 pip install -r requirements.txt
 ```
 
+ poetry env use python
+
+
 2. Make sure MongoDB is running locally on the default port (27017)
 
 3. Create a `.env` file with your configuration (optional, defaults are provided)
