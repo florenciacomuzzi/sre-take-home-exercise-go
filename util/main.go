@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"io"
 	"log"
 	"math/rand"
 	"net/http"
@@ -31,8 +32,24 @@ func main() {
 			return
 		}
 
-		w.WriteHeader(http.StatusOK)
-		fmt.Fprintln(w, "Hello, World!")
+		switch r.Method {
+		case http.MethodPost:
+			body, err := io.ReadAll(r.Body)
+			if err != nil {
+				http.Error(w, "Error reading request body", http.StatusBadRequest)
+				log.Printf("Error reading request body: %v", err)
+				return
+			}
+			log.Printf("Received POST request with body: %s", string(body))
+			w.WriteHeader(http.StatusOK)
+			fmt.Fprintf(w, "Received POST request with body: %s", string(body))
+		case http.MethodGet:
+			w.WriteHeader(http.StatusOK)
+			fmt.Fprintln(w, "Hello, World!")
+		default:
+			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+			return
+		}
 		log.Println("Returned 200")
 	})
 

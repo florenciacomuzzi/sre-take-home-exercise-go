@@ -9,7 +9,7 @@ COPY go.mod go.sum ./
 RUN go mod download
 
 # Now copy the actual source files (doesn't bust cache if deps didn't change)
-COPY ./util ./util
+COPY . ./util
 
 # Build the app
 WORKDIR /app/util

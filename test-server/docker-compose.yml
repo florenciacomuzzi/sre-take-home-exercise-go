@@ -1,0 +1,26 @@
+version: '3'
+
+services:
+  server-20:
+    build: .
+    ports:
+      - "8080:5000"
+    environment:
+      - SUCCESS_RATE=20
+    restart: always
+
+  server-50:
+    build: .
+    ports:
+      - "8081:5000"
+    environment:
+      - SUCCESS_RATE=50
+    restart: always
+
+  server-80:
+    build: .
+    ports:
+      - "8082:5000"
+    environment:
+      - SUCCESS_RATE=80
+    restart: always 
