@@ -1,7 +1,30 @@
 services:
-  go-server:
+  go-server-20:
     build:
       context: .
       dockerfile: util.Dockerfile
     ports:
       - "8080:8080"
+    environment:
+      - FAILURE_RATE=0.2
+      - PORT=8080
+
+  go-server-50:
+    build:
+      context: .
+      dockerfile: util.Dockerfile
+    ports:
+      - "8081:8081"
+    environment:
+      - FAILURE_RATE=0.5
+      - PORT=8081
+
+  go-server-80:
+    build:
+      context: .
+      dockerfile: util.Dockerfile
+    ports:
+      - "8082:8082"
+    environment:
+      - FAILURE_RATE=0.8
+      - PORT=8082

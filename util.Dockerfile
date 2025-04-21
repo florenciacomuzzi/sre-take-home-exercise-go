@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1
-FROM golang:1.21-alpine
+FROM golang:1.24-alpine
 
 # Create app directory
 WORKDIR /app
@@ -15,6 +15,13 @@ COPY ./util ./util
 WORKDIR /app/util
 RUN go build -o /app/server .
 
-# Expose the port and run the binary
-EXPOSE 8080
-CMD ["/app/server"]
+# Remove the static EXPOSE as we'll use dynamic ports
+# Use an entrypoint script to handle the dynamic port
+COPY <<EOF /app/entrypoint.sh
+#!/bin/sh
+export PORT=\${PORT:-8080}
+/app/server
+EOF
+
+RUN chmod +x /app/entrypoint.sh
+ENTRYPOINT ["/app/entrypoint.sh"]
