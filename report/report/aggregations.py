@@ -1,4 +1,4 @@
-def uptime_percentage(pid, start=None, end=None):
+def get_uptime_percentage(pid, start=None, end=None):
     pipeline = [
         {
             '$match': {
@@ -81,3 +81,17 @@ def uptime_percentage(pid, start=None, end=None):
     pipeline[0]['$match'] = match
     return pipeline
 
+def get_unique_pids():
+    pipeline = [
+        {
+            '$group': {
+                '_id': '$pid'
+            }
+        },
+        {
+            '$sort': {
+                '_id': 1
+            }
+        }
+    ]
+    return pipeline

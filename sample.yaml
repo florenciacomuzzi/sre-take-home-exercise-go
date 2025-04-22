@@ -26,13 +26,13 @@
 #  method: POST
 - name: 5000 - 25% of 60 s.
   url: http://localhost:5000
-  body: '{"foo":"bar"}'
+  body: '{"pid":"mockserver0"}'
   headers:
     content-type: application/json
   method: POST
 - name: 5001 - 80% of 60 s.
   url: http://localhost:5001
-  body: '{"foo":"bar"}'
+  body: '{"pid":"mockserver1"}'
   headers:
     content-type: application/json
   method: POST

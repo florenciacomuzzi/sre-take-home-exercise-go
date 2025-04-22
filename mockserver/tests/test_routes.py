@@ -3,7 +3,6 @@ from flask import Flask
 from mockserver.routes import configure_routes
 from mockserver.database import Database
 import mongomock
-import time
 
 @pytest.fixture
 def app():

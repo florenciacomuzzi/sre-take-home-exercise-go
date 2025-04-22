@@ -1,5 +1,5 @@
 from pymongo import MongoClient
-from mockserver.config import Config
+from report.config import Config
 
 class Database:
     _instance = None
