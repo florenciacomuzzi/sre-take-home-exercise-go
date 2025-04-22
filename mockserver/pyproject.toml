@@ -1,11 +1,11 @@
 [tool.poetry]
 name = "mockserver"
 version = "0.1.0"
-description = ""
+description = "A mock server for testing purposes"
 authors = ["Florencia Comuzzi <florenciacomuzzi@gmail.com>"]
 readme = "README.md"
 packages = [
-#    {include = "mockserver"},
+    {include = "mockserver"},
 ]
 
 [tool.poetry.dependencies]
