@@ -1,4 +1,4 @@
-def uptime(pid):
+def uptime_percentage(pid):
     return [
     {
         '$match': {
