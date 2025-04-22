@@ -1,5 +1,15 @@
+import os
+
 from pymongo import MongoClient
 from .config import Config
+
+# Access the environment variables
+
+
+# Check if variables are set
+
+
+
 
 class Database:
     _instance = None
@@ -13,7 +23,9 @@ class Database:
 
     def __init__(self):
         if self._client is None:
-            self._client = MongoClient(Config.MONGODB_URI)
+            # Construct the MongoDB URI with authentication
+            uri = f"mongodb://{Config.MONGODB_USER}:{Config.MONGODB_PASSWORD}@{Config.MONGODB_URI.split('://')[1]}"
+            self._client = MongoClient(uri)
             self._db = self._client[Config.MONGODB_DB_NAME]
 
     @property
