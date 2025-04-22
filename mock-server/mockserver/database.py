@@ -1,15 +1,5 @@
-import os
-
 from pymongo import MongoClient
-from .config import Config
-
-# Access the environment variables
-
-
-# Check if variables are set
-
-
-
+from mockserver.config import Config
 
 class Database:
     _instance = None

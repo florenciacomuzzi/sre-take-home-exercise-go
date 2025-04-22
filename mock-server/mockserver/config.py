@@ -1,7 +1,7 @@
 import os
 from dotenv import load_dotenv
 
-from mock_server import common
+from mockserver import common
 
 load_dotenv()
 

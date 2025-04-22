@@ -21,6 +21,27 @@ services:
       - mongodb:/data/db
     networks:
       - common
+  mock-server:
+    build:
+      context: mock-server
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+    environment:
+      - FLAKY_WINDOW=${FLAKY_WINDOW:-60}
+      - FLAKY_UP_RATIO=${FLAKY_UP_RATIO:-0.8}
+      - PID=${PID:-mockserver}
+      - MONGODB_URI=${MONGODB_URI:-mongodb://mongodb:27017/}
+      - MONGODB_DB_NAME=${MONGODB_DB_NAME:-mongodb}
+      - MONGODB_USER=${MONGODB_USER:-user}
+      - MONGODB_PASSWORD=${MONGODB_PASSWORD:-password}
+      - FLASK_ENV=${FLASK_ENV:-development}
+      - FLASK_DEBUG=${FLASK_DEBUG:-1}
+    depends_on:
+      - mongodb
+    networks:
+      - common
+
 volumes:
   mongodb: { }
 

@@ -2,9 +2,9 @@ import os
 
 from flask import Flask
 
-from mock_server.common import get_uuid
-from mock_server.database import Database
-from mock_server.routes import configure_routes
+from mockserver.common import get_uuid
+from mockserver.database import Database
+from mockserver.routes import configure_routes
 
 def create_app():
     pid = os.environ.get('PID', f'mockserver{get_uuid(8)}')

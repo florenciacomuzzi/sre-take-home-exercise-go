@@ -3,7 +3,7 @@ import time
 from flask import request
 from datetime import datetime
 
-from mock_server.common import get_uuid
+from mockserver.common import get_uuid
 
 
 def configure_routes(app, db, pid):

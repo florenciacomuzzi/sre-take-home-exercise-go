@@ -1,7 +1,7 @@
 import pytest
 from flask import Flask
-from mock_server.routes import configure_routes
-from mock_server.database import Database
+from mockserver.routes import configure_routes
+from mockserver.database import Database
 import mongomock
 import time
 

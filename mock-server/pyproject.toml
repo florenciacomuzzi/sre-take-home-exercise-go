@@ -1,9 +1,12 @@
 [tool.poetry]
-name = "mock-server"
+name = "mockserver"
 version = "0.1.0"
 description = ""
 authors = ["Florencia Comuzzi <florenciacomuzzi@gmail.com>"]
 readme = "README.md"
+packages = [
+#    {include = "mockserver"},
+]
 
 [tool.poetry.dependencies]
 python = "^3.9"

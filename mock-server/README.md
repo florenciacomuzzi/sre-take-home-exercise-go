@@ -19,7 +19,7 @@ pip install -r requirements.txt
 ## Running the Server
 
 ```bash
-python -m mock_server.app
+python -m mockserver.app
 ```
 
 The server will start on `http://localhost:5000`
