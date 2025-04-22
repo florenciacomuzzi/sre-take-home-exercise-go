@@ -15,7 +15,9 @@ class Database:
     def __init__(self):
         if self._client is None:
             # Construct the MongoDB URI with authentication
-            uri = f"mongodb://{Config.MONGODB_USER}:{Config.MONGODB_PASSWORD}@{Config.MONGODB_URI.split('://')[1]}"
+            uri = (f"mongodb://"
+                   f"{Config.MONGODB_USER}:{Config.MONGODB_PASSWORD}@"
+                   f"{Config.MONGODB_URI.split('://')[1]}")
             self._client = MongoClient(uri)
             self._db = self._client[Config.MONGODB_DB_NAME]
 

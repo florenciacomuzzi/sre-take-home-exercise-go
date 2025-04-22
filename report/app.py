@@ -1,5 +1,3 @@
-import os
-
 from flask import Flask
 
 from report.database import Database
