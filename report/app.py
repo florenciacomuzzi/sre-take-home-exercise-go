@@ -5,6 +5,7 @@ from flask import Flask
 from report.database import Database
 from report.routes import configure_routes
 
+
 def create_app():
     # pid = os.environ.get('PID', f'mockserver{get_uuid(8)}')
     pid = 'mockserver0'
@@ -13,6 +14,7 @@ def create_app():
 
     configure_routes(app, db, pid)
     return app
+
 
 if __name__ == '__main__':
     app = create_app()

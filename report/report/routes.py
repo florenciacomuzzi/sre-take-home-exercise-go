@@ -13,10 +13,10 @@ def configure_routes(app, db, pid):
     def report():
         metrics = Metrics()
         results = metrics
-        
+
         # Return JSON for API requests
         if request.headers.get('Accept') == 'application/json':
             return jsonify(results)
-            
+
         # Return HTML template for browser requests
         return render_template('metrics.html', metrics=results)

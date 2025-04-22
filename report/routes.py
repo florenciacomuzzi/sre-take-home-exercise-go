@@ -13,15 +13,15 @@ def configure_routes(app, db, pid):
     def report():
         metrics = Metrics()
         pids = metrics.get_all_pids()
-        
+
         # Get metrics for all PIDs
         results = {}
         for pid in pids:
             results[pid] = metrics.get_uptime_percentage(pid)
-        
+
         # Return JSON for API requests
         if request.headers.get('Accept') == 'application/json':
             return jsonify(results)
-            
+
         # Return HTML template for browser requests
-        return render_template('metrics.html', metrics_by_pid=results) 
+        return render_template('metrics.html', metrics_by_pid=results)
