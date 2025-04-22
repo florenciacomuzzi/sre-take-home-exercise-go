@@ -71,11 +71,16 @@ func (c *Endpoint) IsUp(ds *Stats) bool {
 	ds.Total++
 	ms := float64(duration.Milliseconds())
 
-	if err == nil && ms < 500 && resp.StatusCode >= 200 && resp.StatusCode < 300 {
+	if err != nil {
+		return false
+	}
+
+	defer resp.Body.Close()
+
+	if ms < 500 && resp.StatusCode >= 200 && resp.StatusCode < 300 {
 		ds.Success++
 		return true
 	}
-	defer resp.Body.Close()
 	return false
 }
 

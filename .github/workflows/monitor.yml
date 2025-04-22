@@ -1,0 +1,43 @@
+name: Monitor CI
+
+on:
+  push:
+    paths:
+      - 'monitor/**'
+      - '.github/workflows/monitor.yml'
+  pull_request:
+    paths:
+      - 'monitor/**'
+      - '.github/workflows/monitor.yml'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Go
+      uses: actions/setup-go@v4
+      with:
+        go-version: '1.21'
+
+    - name: Cache Go modules
+      uses: actions/cache@v3
+      with:
+        path: |
+          ~/go/pkg/mod
+          monitor/go.sum
+        key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+        restore-keys: |
+          ${{ runner.os }}-go-
+
+    - name: Run tests
+      run: |
+        cd monitor
+        go test -v ./...
+
+    - name: Run linting
+      run: |
+        cd monitor
+        go vet ./...
+        golangci-lint run ./... 

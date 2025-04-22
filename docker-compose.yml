@@ -85,6 +85,20 @@ services:
     networks:
       - common
 
+  monitor:
+    container_name: monitor
+    build:
+      context: monitor
+      dockerfile: Dockerfile
+    volumes:
+      - ./sample.yaml:/app/sample.yaml
+    command: /app/monitor /app/sample.yaml
+    networks:
+      - common
+    depends_on:
+      - mockserver0
+      - mockserver1
+
 #  charts:
 #    build:
 #      context: 'charts'
