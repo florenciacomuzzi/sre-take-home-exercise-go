@@ -1,6 +1,7 @@
 from pymongo import MongoClient
 from mockserver.config import Config
 
+
 class Database:
     _instance = None
     _client = None
@@ -26,4 +27,4 @@ class Database:
         if self._client:
             self._client.close()
             self._client = None
-            self._db = None 
+            self._db = None
