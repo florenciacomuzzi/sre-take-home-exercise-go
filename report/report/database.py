@@ -26,4 +26,18 @@ class Database:
         if self._client:
             self._client.close()
             self._client = None
-            self._db = None 
+            self._db = None
+
+    def aggregate(self, collection_name: str, pipeline: list) -> list:
+        """
+        Run a MongoDB aggregation pipeline on the specified collection.
+        
+        Args:
+            collection_name (str): The name of the collection to run the aggregation on
+            pipeline (list): List of pipeline stages to execute
+            
+        Returns:
+            list: The results of the aggregation pipeline
+        """
+        collection = self._db[collection_name]
+        return list(collection.aggregate(pipeline)) 
