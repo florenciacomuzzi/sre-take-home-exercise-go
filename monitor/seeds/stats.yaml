@@ -1,0 +1,47 @@
+{
+    "http://localhost:5000": {
+        "available": 0,
+        "timestamp": "2025-04-23T19:23:49.603838",
+        "total": 126
+    },
+    "http://localhost:5000/2": {
+        "available": 0,
+        "timestamp": "2025-04-23T19:23:49.610667",
+        "total": 126
+    },
+    "http://localhost:5001": {
+        "available": 28,
+        "timestamp": "2025-04-23T19:23:49.607954",
+        "total": 126
+    },
+    "http://localhost:5001/2": {
+        "available": 0,
+        "timestamp": "2025-04-23T19:23:49.613581",
+        "total": 126
+    },
+    "start": "2025-04-23T19:23:47.489110"
+}
+{
+    "http://localhost:5000": {
+        "available": 0,
+        "timestamp": "2025-04-23T19:23:49.588807",
+        "total": 125
+    },
+    "http://localhost:5000/2": {
+        "available": 0,
+        "timestamp": "2025-04-23T19:23:49.596429",
+        "total": 125
+    },
+    "http://localhost:5001": {
+        "available": 28,
+        "timestamp": "2025-04-23T19:23:49.593065",
+        "total": 125
+    },
+    "http://localhost:5001/2": {
+        "available": 0,
+        "timestamp": "2025-04-23T19:23:49.599418",
+        "total": 125
+    },
+    "start": "2025-04-23T19:23:47.489110"
+}
+
