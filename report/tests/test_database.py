@@ -1,7 +1,7 @@
 import pytest
 import mongomock
 
-from report import database  # ← make sure this actually resolves to your database.py
+from report import database
 from report.database import Database
 from report.aggregations import get_uptime_percentage
 

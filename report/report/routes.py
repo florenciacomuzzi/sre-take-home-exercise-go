@@ -1,6 +1,5 @@
 from flask import request, jsonify, render_template
 
-from report.aggregations import get_uptime_percentage
 from report.metrics import Metrics
 
 
