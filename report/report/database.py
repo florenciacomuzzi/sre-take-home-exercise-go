@@ -36,7 +36,8 @@ class Database:
         Run a MongoDB aggregation pipeline on the specified collection.
 
         Args:
-            collection_name (str): The name of the collection to run the aggregation on
+            collection_name (str): The name of the collection
+                to run the aggregation on
             pipeline (list): List of pipeline stages to execute
 
         Returns:
