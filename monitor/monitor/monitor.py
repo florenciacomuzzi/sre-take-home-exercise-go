@@ -17,8 +17,8 @@ def get_domain(url):
 
 def monitor_endpoints(endpoints, stats, health_metrics):
     for endpoint in endpoints:
-        available = is_up(endpoint['url'], endpoint.get('method', 'GET'), endpoint.get('body'),
-                          endpoint.get('headers'))
+        available = is_up(url=endpoint['url'], method=endpoint.get('method', 'GET'), body=endpoint.get('body'),
+                          headers=endpoint.get('headers'))
         ts = datetime.now(timezone.utc)
 
         domain = get_domain(endpoint['url'])
@@ -28,12 +28,12 @@ def monitor_endpoints(endpoints, stats, health_metrics):
             'url': endpoint['url'],
             'start': stats['start'],
             'total': 0,
-            'available': 0,
+            'success': 0,
         })
 
         stat['end'] = ts
 
-        stat['available'] += 1 if available else 0
+        stat['success'] += 1 if available else 0
         stat['total'] += 1
 
         stats[endpoint['url']] = stat

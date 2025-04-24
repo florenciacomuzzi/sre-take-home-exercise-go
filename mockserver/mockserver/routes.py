@@ -83,15 +83,9 @@ def configure_routes(*, app, http_metrics, pid, server_start_ts=None):
 
         if phase < up_ratio * window:
             code = random_successful_code()
-            response_data['status'] = 'success'
-            response_data['message'] = 'OK'
-            response_data['code'] = code
-            http_metrics.insert_response(response_data)
-            return 'OK', code
+            response_data = response_data | {'status': 'success', 'message': 'OK', 'code': code}
         else:
             code = random_error_code()
-            response_data['status'] = 'error'
-            response_data['message'] = 'FAIL'
-            response_data['code'] = code
-            http_metrics.insert_response(response_data)
-            return 'FAIL', code
+            response_data = response_data | {'status': 'error', 'message': 'FAIL', 'code': code}
+        http_metrics.insert_response(response_data)
+        return response_data, code

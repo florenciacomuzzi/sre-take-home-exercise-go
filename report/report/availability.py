@@ -1,6 +1,10 @@
+from datetime import tzinfo, datetime, timezone, timedelta
+
 from report.database import Database
-from report.aggregations import get_availability_by_domain, \
-    get_availability_by_domains, get_availability_by_server
+from report.aggregations import (get_availability_by_domains, get_availability_by_server,
+                                 get_availability_by_domain_since)
+
+from report import aggregations
 
 
 class Metrics:
@@ -20,12 +24,27 @@ class HealthMetrics:
         self.db = Database()
         self.coll = 'health_metrics'
 
-    def get_availability_by_domain(self, domain):
-        pipeline = get_availability_by_domain(domain)
+    def get_availability_by_domain(self):
+        pipeline = aggregations.get_availability_by_domain()
         results = self.db.aggregate(self.coll, pipeline)
         return results
 
-    def get_availability_by_domains(self):
-        pipeline = get_availability_by_domains()
+    def get_availability_by_domain_since(self, dt):
+        pipeline = get_availability_by_domain_since(dt)
         results = self.db.aggregate(self.coll, pipeline)
         return results
+
+    def get_alltime_availability(self):
+        return self.get_availability_by_domain()
+
+    def get_alltime_and_last30mins_availability(self):
+        alltime = self.get_availability_by_domain()
+        start = datetime.now(timezone.utc) - timedelta(minutes=30)
+        last30mins = self.get_availability_by_domain_since(start)
+        results = {
+            ''
+            'alltime': alltime,
+            'last30mins': last30mins
+        }
+        return alltime, last30mins
+

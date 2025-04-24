@@ -9,7 +9,7 @@ logger = logging.getLogger(__name__)
 logger.addHandler(logging.StreamHandler())
 
 
-def is_up(url: str, method: str = 'GET', body: Optional[Union[str, Dict[str, Any]]] = None, 
+def is_up(*, url: str, method: str = 'GET', body: Optional[Union[str, Dict[str, Any]]] = None,
          headers: Optional[Dict[str, str]] = None) -> int:
     """
     Pings the specified URL with the given method, body, and headers.
