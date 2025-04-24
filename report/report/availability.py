@@ -1,8 +1,8 @@
 from datetime import tzinfo, datetime, timezone, timedelta
 
 from report.database import Database
-from report.aggregations import (get_availability_by_domains, get_availability_by_server,
-                                 get_availability_by_domain_since)
+from report.aggregations import (get_availability_by_server,
+get_availability_by_domain_since)
 
 from report import aggregations
 
