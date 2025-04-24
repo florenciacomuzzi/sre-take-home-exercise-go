@@ -23,4 +23,4 @@ ENV FLAKY_WINDOW=60
 ENV FLAKY_UP_RATIO=0.8
 ENV PID=mockserver
 
-CMD ["poetry", "run", "python", "app.py"]
+CMD ["python", "app.py"]

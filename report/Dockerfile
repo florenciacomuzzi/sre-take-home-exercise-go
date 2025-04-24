@@ -14,7 +14,8 @@ ENV PATH="/root/.local/bin:$PATH"
 
 COPY . ./
 
-RUN POETRY_VIRTUALENVS_CREATE=false poetry install --no-cache --no-interaction --only main --no-ansi
+# Install dependencies
+RUN POETRY_VIRTUALENVS_CREATE=false poetry install --no-cache --no-interaction --no-ansi
 
 EXPOSE 5000
 
@@ -23,4 +24,4 @@ ENV FLAKY_WINDOW=60
 ENV FLAKY_UP_RATIO=0.8
 #ENV PID=mockserver
 
-CMD ["poetry", "run", "python", "app.py"]
+CMD ["python", "app.py"]
