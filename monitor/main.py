@@ -1,12 +1,14 @@
 import argparse
 import json
 from datetime import datetime
-
 import yaml
 import sys
 import time
 import logging
 from typing import Dict, Any
+
+from pykwalify.core import Core
+from pykwalify.errors import SchemaError
 
 from monitor.monitor import monitor_endpoints
 from monitor.serializer import json_serial
@@ -47,16 +49,24 @@ def read_config(file_path: str) -> Dict[str, Any]:
         print(f"Error: Invalid YAML in configuration file: {e}", file=sys.stderr)
         sys.exit(1)
 
+
 def main():
     parser = argparse.ArgumentParser(description='Monitor endpoints from a YAML configuration file')
     parser.add_argument('config_file', help='Path to the YAML configuration file')
     args = parser.parse_args()
     
     config = read_config(args.config_file)
+
+    core = Core(source_data=config,
+                schema_files=["config-schema.yaml"])
+    try:
+        core.validate()
+    except SchemaError as e:
+        logger.error("Validation failed:")
+        for err in e.args[0]:
+            logger.error("  ", err)
+
     for item in config:
-        if 'url' not in item:
-            print(f"Error: Missing 'url' in configuration item: {item}", file=sys.stderr)
-            sys.exit(1)
         item['url'] = clean_url(item['url'])
         if 'method' not in item:
             item['method'] = 'GET'

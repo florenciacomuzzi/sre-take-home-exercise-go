@@ -65,25 +65,25 @@
 <body>
     <h1>Server Metrics</h1>
     
-    <h2 class="section-header">Process Metrics</h2>
-    {% for metric in metrics.get_uptime_percentages() %}
+    <h2 class="section-header">Server-Side Metrics</h2>
+    {% for metric in metrics.get_availability_by_server() %}
     <div class="metrics-container">
-        <div class="pid-header">PID: {{ metric.pid }}</div>
+        <div class="pid-header">Domain: {{ metric.domain }}</div>
         <div class="metric-item">
-            <span class="metric-label">Uptime Percentage:</span>
-            <span class="metric-value uptime-percentage">{{ metric.uptimePercentage }}%</span>
+            <span class="metric-label">Availability Percentage:</span>
+            <span class="metric-value uptime-percentage">{{ metric.availabilityPercentage }}%</span>
         </div>
         <div class="metric-item">
-            <span class="metric-label">Total Records:</span>
-            <span class="metric-value">{{ metric.totalRecords }}</span>
+            <span class="metric-label">Total Requests:</span>
+            <span class="metric-value">{{ metric.total }}</span>
         </div>
         <div class="metric-item">
             <span class="metric-label">Successful Requests:</span>
             <span class="metric-value">{{ metric.success }}</span>
         </div>
         <div class="metric-item">
-            <span class="metric-label">Failed Requests:</span>
-            <span class="metric-value">{{ metric.fail }}</span>
+            <span class="metric-label">Monitoring Period:</span>
+            <span class="metric-value">{{ metric.start }}-{{ metric.end }}</span>
         </div>
     </div> 
     {% endfor %}

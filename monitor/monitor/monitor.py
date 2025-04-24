@@ -4,14 +4,24 @@ from urllib.parse import urlparse
 from monitor.endpoint import is_up
 from monitor.metrics import HealthMetrics
 
+def get_domain(url):
+    """
+    Extract the domain from a URL.
+
+    :param url: The URL to extract the domain from
+    :return: The domain as a string
+    """
+    parsed_url = urlparse(url)
+    domain = parsed_url.netloc.split(':')[0]  # Remove port number if present
+    return domain
+
 def monitor_endpoints(endpoints, stats, health_metrics):
     for endpoint in endpoints:
         available = is_up(endpoint['url'], endpoint.get('method', 'GET'), endpoint.get('body'),
                           endpoint.get('headers'))
-        ts = datetime.now()
+        ts = datetime.now(timezone.utc)
 
-        parsed_url = urlparse(endpoint['url'])
-        domain = parsed_url.netloc.split(':')[0]  # Remove port number if present
+        domain = get_domain(endpoint['url'])
 
         stat = stats.get(endpoint['url'], {
             'domain': domain,

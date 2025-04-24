@@ -1,23 +1,29 @@
+import logging
+from datetime import datetime, timezone
+
 import os
 
 from flask import Flask
 
 from mockserver.common import get_uuid
-from mockserver.database import Database
+from mockserver.http_metrics import HttpMetrics
 from mockserver.routes import configure_routes
+
+logger = logging.getLogger(__name__)
 
 
 def create_app():
-    pid = os.environ.get('PID', f'mockserver{get_uuid(8)}')
     app = Flask(__name__)
-    db = Database()
+    http_metrics = HttpMetrics()
 
     # Default config via environment vars (or fallback)
     app.config['WINDOW'] = float(os.getenv('FLAKY_WINDOW', 60))     # seconds
     app.config['UP_RATIO'] = float(
         os.getenv('FLAKY_UP_RATIO', 0.8))  # success fraction
 
-    configure_routes(app, db, pid)
+    pid = os.getenv('PID', f'mockserver{get_uuid(8)}')
+
+    configure_routes(app=app, http_metrics=http_metrics, server_start_ts=datetime.now(timezone.utc), pid=pid)
     return app
 
 

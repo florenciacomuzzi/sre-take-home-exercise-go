@@ -1,6 +1,6 @@
 from flask import request, jsonify, render_template
 
-from report.metrics import Metrics
+from report.availability import Metrics as HttpMetrics
 from report.availability import HealthMetrics
 
 
@@ -8,7 +8,7 @@ def configure_routes(app, db, pid):
 
     @app.route('/', methods=['GET', 'POST'])
     def report():
-        metrics = Metrics()
+        metrics = HttpMetrics()
         results = metrics
 
         health_metrics = HealthMetrics()

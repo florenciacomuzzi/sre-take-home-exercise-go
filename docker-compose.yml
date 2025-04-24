@@ -32,7 +32,6 @@ services:
     environment:
       - FLAKY_WINDOW=${FLAKY_WINDOW:-60}
       - FLAKY_UP_RATIO=${FLAKY_UP_RATIO:-0.5}
-      - PID=${PID:-mockserver0}
       - MONGODB_URI=${MONGODB_URI:-mongodb://mongodb:27017/}
       - MONGODB_DB_NAME=${MONGODB_DB_NAME:-mongodb}
       - MONGODB_USER=${MONGODB_USER:-user}
@@ -54,7 +53,29 @@ services:
     environment:
       - FLAKY_WINDOW=${FLAKY_WINDOW:-60}
       - FLAKY_UP_RATIO=${FLAKY_UP_RATIO:-0.5}
-      - PID=${PID:-mockserver1}
+#      - PID=${PID:-mockserver1}
+      - MONGODB_URI=${MONGODB_URI:-mongodb://mongodb:27017/}
+      - MONGODB_DB_NAME=${MONGODB_DB_NAME:-mongodb}
+      - MONGODB_USER=${MONGODB_USER:-user}
+      - MONGODB_PASSWORD=${MONGODB_PASSWORD:-pass}
+      - FLASK_ENV=${FLASK_ENV:-development}
+      - FLASK_DEBUG=${FLASK_DEBUG:-1}
+    depends_on:
+      - mongodb
+    networks:
+      - common
+
+  mockserver2:
+    container_name: mockserver2
+    build:
+      context: mockserver
+      dockerfile: Dockerfile
+    ports:
+      - "5003:5000"
+    environment:
+      - FLAKY_WINDOW=${FLAKY_WINDOW:-60}
+      - FLAKY_UP_RATIO=${FLAKY_UP_RATIO:-0.25}
+      #      - PID=${PID:-mockserver1}
       - MONGODB_URI=${MONGODB_URI:-mongodb://mongodb:27017/}
       - MONGODB_DB_NAME=${MONGODB_DB_NAME:-mongodb}
       - MONGODB_USER=${MONGODB_USER:-user}
@@ -96,7 +117,7 @@ services:
       - MONGODB_USER=${MONGODB_USER:-user}
       - MONGODB_PASSWORD=${MONGODB_PASSWORD:-pass}
     volumes:
-      - ./sample.yaml:/app/sample.yaml:ro
+      - ./monitor/sample.yaml:/app/sample.yaml:ro
     command: ["python", "main.py", "/app/sample.yaml"]
     depends_on:
       - mongodb

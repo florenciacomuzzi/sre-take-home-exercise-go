@@ -1,8 +1,7 @@
 from pymongo import MongoClient
 from pymongo.errors import BulkWriteError
 from monitor.config import Config
-from typing import List, Dict, Any
-from datetime import datetime
+from typing import Dict, Any
 
 
 class Database:

@@ -24,7 +24,7 @@ def is_up(url: str, method: str = 'GET', body: Optional[Union[str, Dict[str, Any
     if headers is None:
         headers = {}
     
-    if body is not None and 'Content-Type' not in headers:
+    if body is not None and 'Content-Type' not in headers and 'content-type' not in headers:
         headers['Content-Type'] = 'application/json'
     
     if isinstance(body, dict):

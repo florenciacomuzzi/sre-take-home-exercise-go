@@ -21,6 +21,5 @@ EXPOSE 5000
 # Set environment variables with defaults
 ENV FLAKY_WINDOW=60
 ENV FLAKY_UP_RATIO=0.8
-ENV PID=mockserver
 
 CMD ["python", "app.py"]

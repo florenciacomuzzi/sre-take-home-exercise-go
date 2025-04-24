@@ -1,3 +1,78 @@
+def get_availability_by_server():
+    pipeline = [
+        {
+            '$group': {
+                '_id': {
+                    'url': '$url',
+                    'domain': '$domain'
+                },
+                'start': {
+                    '$min': '$server_start_ts'
+                },
+                'end': {
+                    '$max': '$timestamp'
+                },
+                'total': {
+                    '$sum': 1
+                },
+                'success': {
+                    '$sum': {
+                        '$cond': [
+                            {
+                                '$eq': [
+                                    '$status', 'success'
+                                ]
+                            }, 1, 0
+                        ]
+                    }
+                }
+            }
+        }, {
+            '$group': {
+                '_id': '$_id.domain',
+                'start': {
+                    '$min': '$start'
+                },
+                'end': {
+                    '$min': '$end'
+                },
+                'total': {
+                    '$sum': '$total'
+                },
+                'success': {
+                    '$sum': '$success'
+                }
+            }
+        }, {
+            '$project': {
+                '_id': 0,
+                'domain': '$_id',
+                'success': 1,
+                'total': 1,
+                'start': 1,
+                'end': 1,
+                'availabilityRatio': {
+                    '$divide': [
+                        '$success', '$total'
+                    ]
+                }
+            }
+        }, {
+            '$addFields': {
+                'availabilityPercentage': {
+                    '$multiply': [
+                        '$availabilityRatio', 100
+                    ]
+                }
+            }
+        }, {
+            '$project': {
+                'availabilityRatio': 0
+            }
+        }
+    ]
+    return pipeline
+
 def get_uptime_percentage(pid, start=None, end=None):
     pipeline = [
         {
