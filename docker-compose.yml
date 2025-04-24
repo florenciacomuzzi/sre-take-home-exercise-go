@@ -31,7 +31,7 @@ services:
       - "5000:5000"
     environment:
       - FLAKY_WINDOW=${FLAKY_WINDOW:-60}
-      - FLAKY_UP_RATIO=${FLAKY_UP_RATIO:-0.25}
+      - FLAKY_UP_RATIO=${FLAKY_UP_RATIO:-0.5}
       - PID=${PID:-mockserver0}
       - MONGODB_URI=${MONGODB_URI:-mongodb://mongodb:27017/}
       - MONGODB_DB_NAME=${MONGODB_DB_NAME:-mongodb}
@@ -53,7 +53,7 @@ services:
       - "5001:5000"
     environment:
       - FLAKY_WINDOW=${FLAKY_WINDOW:-60}
-      - FLAKY_UP_RATIO=${FLAKY_UP_RATIO:-0.8}
+      - FLAKY_UP_RATIO=${FLAKY_UP_RATIO:-0.5}
       - PID=${PID:-mockserver1}
       - MONGODB_URI=${MONGODB_URI:-mongodb://mongodb:27017/}
       - MONGODB_DB_NAME=${MONGODB_DB_NAME:-mongodb}
