@@ -90,72 +90,21 @@ services:
     build:
       context: monitor
       dockerfile: Dockerfile
+    environment:
+      - MONGODB_URI=${MONGODB_URI:-mongodb://mongodb:27017/}
+      - MONGODB_DB_NAME=${MONGODB_DB_NAME:-mongodb}
+      - MONGODB_USER=${MONGODB_USER:-user}
+      - MONGODB_PASSWORD=${MONGODB_PASSWORD:-pass}
     volumes:
-      - ./sample.yaml:/app/sample.yaml
-    command: /app/monitor /app/sample.yaml
+      - ./sample.yaml:/app/sample.yaml:ro
+    command: ["python", "main.py", "/app/sample.yaml"]
+    depends_on:
+      - mongodb
     networks:
       - common
-    depends_on:
-      - mockserver0
-      - mockserver1
-
-#  charts:
-#    build:
-#      context: 'charts'
-#      args:
-#        - EMAIL=user@example.com
-#        - PASSWORD=pass
-#    image: charts
-#    ports:
-#      - 8080:80
-#    environment:
-#      CHARTS_SUPPORT_WIDGET_AND_METRICS: 'on'
-#      CHARTS_MONGODB_URI: 'mongodb://user:pass@mongodb'
-#    volumes:
-#      - keys:/mongodb-charts/volumes/keys
-#      - logs:/mongodb-charts/volumes/logs
-#      - db-certs:/mongodb-charts/volumes/db-certs
-#      - web-certs:/mongodb-charts/volumes/web-certs
-#    depends_on:
-#      - mongodb
-#    container_name: charts
-
-volumes:
-  mongodb: { }
-#  keys:
-#  logs:
-#  db-certs:
-#  web-certs:
 
 networks:
   common:
 
-#  go-server-20:
-#    build:
-#      context: .
-#      dockerfile: util.Dockerfile
-#    ports:
-#      - "8080:8080"
-#    environment:
-#      - FAILURE_RATE=0.2
-#      - PORT=8080
-#
-#  go-server-50:
-#    build:
-#      context: .
-#      dockerfile: util.Dockerfile
-#    ports:
-#      - "8081:8081"
-#    environment:
-#      - FAILURE_RATE=0.5
-#      - PORT=8081
-#
-#  go-server-80:
-#    build:
-#      context: .
-#      dockerfile: util.Dockerfile
-#    ports:
-#      - "8082:8082"
-#    environment:
-#      - FAILURE_RATE=0.8
-#      - PORT=8082
+volumes:
+  mongodb:

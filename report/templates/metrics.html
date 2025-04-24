@@ -42,10 +42,30 @@
             padding-bottom: 10px;
             border-bottom: 2px solid #eee;
         }
+        .domain-header {
+            font-size: 1.5em;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #eee;
+        }
+        .availability-percentage {
+            font-size: 1.2em;
+            color: #3498db;
+        }
+        .section-header {
+            font-size: 2em;
+            color: #2c3e50;
+            margin: 30px 0 20px 0;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #eee;
+        }
     </style>
 </head>
 <body>
     <h1>Server Metrics</h1>
+    
+    <h2 class="section-header">Process Metrics</h2>
     {% for metric in metrics.get_uptime_percentages() %}
     <div class="metrics-container">
         <div class="pid-header">PID: {{ metric.pid }}</div>
@@ -64,6 +84,33 @@
         <div class="metric-item">
             <span class="metric-label">Failed Requests:</span>
             <span class="metric-value">{{ metric.fail }}</span>
+        </div>
+    </div> 
+    {% endfor %}
+
+    <h2 class="section-header">Domain Availability</h2>
+    {% for domain_metric in domain_metrics.get_availability_by_domains() %}
+    <div class="metrics-container">
+        <div class="domain-header">Domain: {{ domain_metric.domain }}</div>
+        <div class="metric-item">
+            <span class="metric-label">Availability Percentage:</span>
+            <span class="metric-value availability-percentage">{{ "%.2f"|format(domain_metric.availablePercentage) }}%</span>
+        </div>
+        <div class="metric-item">
+            <span class="metric-label">Available Requests:</span>
+            <span class="metric-value">{{ domain_metric.available }}</span>
+        </div>
+        <div class="metric-item">
+            <span class="metric-label">Total Requests:</span>
+            <span class="metric-value">{{ domain_metric.total }}</span>
+        </div>
+        <div class="metric-item">
+            <span class="metric-label">Monitoring Period:</span>
+            <span class="metric-value">{{ domain_metric.start|datetime }} - {{ domain_metric.end|datetime }}</span>
+        </div>
+        <div class="metric-item">
+            <span class="metric-label">Duration:</span>
+            <span class="metric-value">{{ "%.2f"|format(domain_metric.durationMs/1000) }} seconds</span>
         </div>
     </div>
     {% endfor %}

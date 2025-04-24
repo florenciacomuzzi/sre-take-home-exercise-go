@@ -1,6 +1,6 @@
 import argparse
 import json
-from datetime import datetime, date
+from datetime import datetime
 
 import yaml
 import sys
@@ -11,6 +11,7 @@ from typing import Dict, Any
 from monitor.monitor import monitor_endpoints
 from monitor.serializer import json_serial
 from monitor.utils import clean_url
+from monitor.metrics import HealthMetrics
 
 
 logger = logging.getLogger(__name__)
@@ -66,16 +67,16 @@ def main():
     # TODO detect duplicates
     print(config)
 
+    health_metrics = HealthMetrics()
     stats = {'start': datetime.now()}
     while True:
         start_time = time.time()
-        stats = monitor_endpoints(config, stats)
+        stats = monitor_endpoints(config, stats, health_metrics)
         elapsed = time.time() - start_time
         if elapsed > 15:
             logger.error(f"Monitoring cycle took {elapsed:.2f} seconds, exceeding 15 second threshold")
+            sys.exit(-1)
         logger.info(json.dumps(stats, indent=4, sort_keys=True, default=json_serial))
 
 if __name__ == '__main__':
     main()
-
-

@@ -1,29 +1,19 @@
-#- body: '{"foo":"bar"}'
-#  headers:
-#    content-type: application/json
-#  method: POST
-#  name: sample body up
-#  url: https://dev-sre-take-home-exercise-rubric.us-east-1.recruiting-public.fetchrewards.com/body
-#- name: sample index up
-#  url: https://dev-sre-take-home-exercise-rubric.us-east-1.recruiting-public.fetchrewards.com/
-#- body: "{}"
-#  headers:
-#    content-type: application/json
-#  method: POST
-#  name: sample body down
-#  url: https://dev-sre-take-home-exercise-rubric.us-east-1.recruiting-public.fetchrewards.com/body
-#- name: sample error down
-#  url: https://dev-sre-take-home-exercise-rubric.us-east-1.recruiting-public.fetchrewards.com/error
-#- name: sample 20%
-#  url: http://localhost:8080
-#- name: sample 50%
-#  url: http://localhost:8081
-#- name: sample 80%
-#  url: http://localhost:8082
-#  body: '{"foo":"bar"}'
-#  headers:
-#    content-type: application/json
-#  method: POST
+- body: '{"foo":"bar"}'
+  headers:
+    content-type: application/json
+  method: POST
+  name: sample body up
+  url: https://dev-sre-take-home-exercise-rubric.us-east-1.recruiting-public.fetchrewards.com/body
+- name: sample index up
+  url: https://dev-sre-take-home-exercise-rubric.us-east-1.recruiting-public.fetchrewards.com/
+- body: "{}"
+  headers:
+    content-type: application/json
+  method: POST
+  name: sample body down
+  url: https://dev-sre-take-home-exercise-rubric.us-east-1.recruiting-public.fetchrewards.com/body
+- name: sample error down
+  url: https://dev-sre-take-home-exercise-rubric.us-east-1.recruiting-public.fetchrewards.com/error
 - name: 5000 - 25% of 60 s.
   url: http://localhost:5000
   body: '{"pid":"mockserver0"}'
@@ -36,9 +26,23 @@
   headers:
     content-type: application/json
   method: POST
-#- name: local GET down
-#  url: http://localhost:8080
-#  body: '{"foo":"bar"}'
-#  headers:
-#    content-type: application/json
-#  method: POST
+- name: 5000 - 25% of 60 s. TWO
+  url: http://localhost:5000/2
+  body: '{"pid":"mockserver0"}'
+  headers:
+    content-type: application/json
+  method: POST
+- name: 5001 - 80% of 60 s. TWO
+  url: http://localhost:5001/2
+  body: '{"pid":"mockserver1"}'
+  headers:
+    content-type: application/json
+  method: POST
+- name: Riki Rose
+  url: http://rikirose.com
+- name: Riki Rose - Admin
+  url: http://rikirose.com/admin-login
+- name: Fix Smart Solutions
+  url: http://fixsmart.solutions
+- name: Fix Smart Solutions - Admin
+  url: http://fixsmart.solutions/wp-admin

@@ -96,3 +96,136 @@ def get_unique_pids():
         }
     ]
     return pipeline
+
+def get_availability_by_domains():
+    pipeline = [
+    {
+        '$group': {
+            '_id': '$domain', 
+            'available': {
+                '$sum': '$available'
+            }, 
+            'total': {
+                '$sum': '$total'
+            }, 
+            'start': {
+                '$min': '$start'
+            }, 
+            'end': {
+                '$max': '$end'
+            }
+        }
+    }, {
+        '$project': {
+            '_id': 0, 
+            'domain': '$_id', 
+            'available': 1, 
+            'total': 1, 
+            'start': 1, 
+            'end': 1, 
+            'availableFraction': {
+                '$divide': [
+                    '$available', '$total'
+                ]
+            }, 
+            'durationMs': {
+                '$dateDiff': {
+                    'startDate': '$start', 
+                    'endDate': '$end', 
+                    'unit': 'millisecond'
+                }
+            }
+        }
+    }, {
+        '$project': {
+            '_id': 0, 
+            'domain': '$domain', 
+            'available': 1, 
+            'total': 1,
+            'start': 1,
+            'end': 1,
+            'availablePercentage': {
+                '$multiply': [
+                    '$availableFraction', 100
+                ]
+            }, 
+            'durationMs': {
+                '$dateDiff': {
+                    'startDate': '$start', 
+                    'endDate': '$end', 
+                    'unit': 'millisecond'
+                }
+            }
+        }
+    },
+    ]
+    return pipeline
+
+def get_availability_by_domain(domain):
+        pipeline = [
+        {
+            '$group': {
+                '_id': '$domain',
+                'available': {
+                    '$sum': '$available'
+                },
+                'total': {
+                    '$sum': '$total'
+                },
+                'start': {
+                    '$min': '$start'
+                },
+                'end': {
+                    '$max': '$end'
+                }
+            }
+        }, {
+            '$project': {
+                '_id': 0,
+                'domain': '$_id',
+                'available': 1,
+                'total': 1,
+                'start': 1,
+                'end': 1,
+                'availableFraction': {
+                    '$divide': [
+                        '$available', '$total'
+                    ]
+                },
+                'durationMs': {
+                    '$dateDiff': {
+                        'startDate': '$start',
+                        'endDate': '$end',
+                        'unit': 'millisecond'
+                    }
+                }
+            }
+        }, {
+            '$project': {
+                '_id': 0,
+                'domain': '$domain',
+                'available': 1,
+                'total': 1,
+                'start': 1,
+                'end': 1,
+                'availablePercentage': {
+                    '$multiply': [
+                        '$availableFraction', 100
+                    ]
+                },
+                'durationMs': {
+                    '$dateDiff': {
+                        'startDate': '$start',
+                        'endDate': '$end',
+                        'unit': 'millisecond'
+                    }
+                }
+            }
+        },
+        {
+            '$match': {
+                'domain': domain
+            }
+        }
+    ]
+        return pipeline
