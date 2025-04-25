@@ -73,6 +73,7 @@ def get_availability_by_server():
     ]
     return pipeline
 
+
 def get_availability_by_domain():
     """Gets all-time availability  for all domains."""
     pipeline = [
@@ -123,6 +124,7 @@ def get_availability_by_domain():
         }
     ]
     return pipeline
+
 
 def get_availability_by_domain_since(dt):
     pipeline = [

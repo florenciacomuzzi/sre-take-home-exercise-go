@@ -2,13 +2,14 @@ from datetime import tzinfo, datetime, timezone, timedelta
 
 from report.database import Database
 from report.aggregations import (get_availability_by_server,
-get_availability_by_domain_since)
+                                 get_availability_by_domain_since)
 
 from report import aggregations
 
 
 class Metrics:
     """Availability as measured by monitor utility."""
+
     def __init__(self):
         self.db = Database()
         self.coll = 'http_metrics'
@@ -18,8 +19,10 @@ class Metrics:
         results = self.db.aggregate(self.coll, pipeline)
         return results
 
+
 class HealthMetrics:
     """Availability as measured by monitor utility."""
+
     def __init__(self):
         self.db = Database()
         self.coll = 'health_metrics'
@@ -47,4 +50,3 @@ class HealthMetrics:
             'last30mins': last30mins
         }
         return alltime, last30mins
-

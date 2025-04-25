@@ -31,8 +31,6 @@ class Database:
             self._client = None
             self._db = None
 
-
-
     def aggregate(self, collection_name: str, pipeline: list) -> list:
         """
         Run a MongoDB aggregation pipeline on the specified collection.
