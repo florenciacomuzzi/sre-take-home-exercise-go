@@ -13,6 +13,20 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    services:
+      mongodb:
+        image: mongodb/mongodb-community-server:6.0-ubi8
+        env:
+          MONGO_INITDB_ROOT_USERNAME: user
+          MONGO_INITDB_ROOT_PASSWORD: pass
+        ports:
+          - 27017:27017
+        options: >-
+          --health-cmd="mongosh --eval 'db.runCommand(\"ping\").ok'"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
     steps:
     - uses: actions/checkout@v4
 
@@ -31,13 +45,50 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-go-
 
-    - name: Run tests
+    - name: Run Go tests
       run: |
         cd monitor
         go test -v ./...
 
-    - name: Run linting
+    - name: Run Go linting
       run: |
         cd monitor
         go vet ./...
-        golangci-lint run ./... 
+        golangci-lint run ./...
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.9'
+
+    - name: Install Poetry
+      uses: snok/install-poetry@v1
+      with:
+        version: latest
+        virtualenvs-create: true
+        virtualenvs-in-project: true
+
+    - name: Load cached venv
+      id: cached-poetry-dependencies
+      uses: actions/cache@v3
+      with:
+        path: monitor/.venv
+        key: venv-${{ runner.os }}-${{ hashFiles('**/poetry.lock') }}
+
+    - name: Install Python dependencies
+      if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
+      run: |
+        cd monitor
+        poetry install --no-interaction --no-root
+
+    - name: Run Python tests
+      run: |
+        cd monitor
+        poetry run pytest tests/ -v
+
+    - name: Run Python linting
+      run: |
+        cd monitor
+        poetry run flake8 .
+        poetry run black --check .
+        poetry run isort --check-only . 
