@@ -10,4 +10,4 @@ def json_serial(obj):
         return obj.isoformat()
     if isinstance(obj, ObjectId):
         return str(obj)
-    raise TypeError ("Type %s not serializable" % type(obj))
+    raise TypeError("Type %s not serializable" % type(obj))

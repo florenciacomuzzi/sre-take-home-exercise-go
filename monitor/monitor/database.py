@@ -52,7 +52,6 @@ class Database:
         if len(self._buffer) >= self._buffer_size:
             self._flush_buffer(collection_name)
 
-
     def _flush_buffer(self, collection_name: str) -> None:
         """Flush the buffer to MongoDB"""
         if self._buffer:

@@ -29,11 +29,10 @@ handler.setFormatter(formatter)
 logger.addHandler(handler)
 
 
-
 def read_config(file_path: str) -> Dict[str, Any]:
     """
     Read and parse a YAML configuration file.
-    
+
     :param file_path: Path to the YAML configuration file
     :return: Dictionary containing the configuration
     :raises: FileNotFoundError if file doesn't exist
@@ -43,18 +42,22 @@ def read_config(file_path: str) -> Dict[str, Any]:
         with open(file_path, 'r') as f:
             return yaml.safe_load(f)
     except FileNotFoundError:
-        print(f"Error: Configuration file '{file_path}' not found", file=sys.stderr)
+        print(
+            f"Error: Configuration file '{file_path}' not found", file=sys.stderr)
         sys.exit(1)
     except yaml.YAMLError as e:
-        print(f"Error: Invalid YAML in configuration file: {e}", file=sys.stderr)
+        print(
+            f"Error: Invalid YAML in configuration file: {e}", file=sys.stderr)
         sys.exit(1)
 
 
 def main():
-    parser = argparse.ArgumentParser(description='Monitor endpoints from a YAML configuration file')
-    parser.add_argument('config_file', help='Path to the YAML configuration file')
+    parser = argparse.ArgumentParser(
+        description='Monitor endpoints from a YAML configuration file')
+    parser.add_argument(
+        'config_file', help='Path to the YAML configuration file')
     args = parser.parse_args()
-    
+
     config = read_config(args.config_file)
 
     core = Core(source_data=config,
@@ -84,9 +87,12 @@ def main():
         stats = monitor_endpoints(config, stats, health_metrics)
         elapsed = time.time() - start_time
         if elapsed > 15:
-            logger.error(f"Monitoring cycle took {elapsed:.2f} seconds, exceeding 15 second threshold")
+            logger.error(
+                f"Monitoring cycle took {elapsed:.2f} seconds, exceeding 15 second threshold")
             sys.exit(-1)
-        logger.info(json.dumps(stats, indent=4, sort_keys=True, default=json_serial))
+        logger.info(json.dumps(stats, indent=4,
+                    sort_keys=True, default=json_serial))
+
 
 if __name__ == '__main__':
     main()

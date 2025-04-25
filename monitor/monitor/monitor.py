@@ -4,6 +4,7 @@ from urllib.parse import urlparse
 from monitor.endpoint import is_up
 from monitor.metrics import HealthMetrics
 
+
 def get_domain(url):
     """
     Extract the domain from a URL.
@@ -14,6 +15,7 @@ def get_domain(url):
     parsed_url = urlparse(url)
     domain = parsed_url.netloc.split(':')[0]  # Remove port number if present
     return domain
+
 
 def monitor_endpoints(endpoints, stats, health_metrics):
     for endpoint in endpoints:
