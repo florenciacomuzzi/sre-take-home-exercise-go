@@ -1,6 +1,48 @@
 # Endpoint Monitor
 
-This application monitors the availability of HTTP endpoints and calculates their uptime percentage. It includes mock servers with configurable failure rates for testing purposes.
+This repository contains three Python applications that work together to monitor and report on HTTP endpoint availability:
+
+1. **Monitor** - A Flask application that pings configured endpoints and records health metrics
+2. **MockServer** - A Flask application that simulates endpoints with configurable failure rates
+3. **Report** - A Flask application that displays availability metrics and uptime statistics
+
+## Architecture Overview
+
+The system consists of three main components:
+
+### Monitor Application
+- Flask application that continuously monitors configured endpoints
+- Configuration is provided via a YAML file (location specified as CLI argument)
+- Records health metrics to MongoDB
+- Mounts configuration file via Docker Compose (default: `sample.yaml`)
+
+### MockServer Application
+- Flask application that simulates real endpoints
+- Configurable failure rates via environment variables
+- Uses time windows (default: 60 seconds) to determine failure patterns
+- Records HTTP request metrics to MongoDB
+- Useful for testing the monitoring system
+
+### Report Application
+- Flask application that displays metrics and statistics
+- Shows uptime percentages based on all historical data
+- Accessible at http://localhost:5002 (configurable in docker-compose.yml)
+- Visualizes both health metrics and HTTP request metrics
+
+#### Report Dashboard Overview
+![Report Dashboard Overview](images/report1.png)
+
+#### Detailed Metrics View
+![Detailed Metrics View](images/report2.png)
+
+#### Historical Data Analysis
+![Historical Data Analysis](images/report3.png)
+
+## Data Storage
+
+All applications store their data in MongoDB with two main collections:
+- `http_metrics`: Records of HTTP requests received by mock servers
+- `health_metrics`: Health check results from the monitor application
 
 ## Prerequisites
 
@@ -10,18 +52,22 @@ This application monitors the availability of HTTP endpoints and calculates thei
 ## Setup
 
 1. Clone this repository
-2. Start the mock servers using Docker Compose:
+2. Start all services using Docker Compose:
    ```bash
    docker-compose up -d
    ```
-   This will start three mock servers with different failure rates:
-   - Server on port 8080 with 20% failure rate
-   - Server on port 8081 with 50% failure rate
-   - Server on port 8082 with 80% failure rate
+   This will start:
+   - Monitor application
+   - Three mock servers with different failure rates:
+     - Server on port 5000 with 26% failure rate
+     - Server on port 5001 with 50% failure rate
+     - Server on port 5003 with 78% failure rate
+   - Report application (accessible at http://localhost:5002)
 
 ## Configuration
 
-The application uses a YAML configuration file to specify which endpoints to monitor. Here's the schema for the configuration file:
+### Monitor Configuration
+The monitor application uses a YAML configuration file to specify which endpoints to monitor. Here's the schema:
 
 ```yaml
 - name: string          # Name of the endpoint (for display purposes)
@@ -32,21 +78,17 @@ The application uses a YAML configuration file to specify which endpoints to mon
   body: string          # Request body (optional, for POST/PUT requests)
 ```
 
-### Example Configuration
+### MockServer Configuration
+Mock servers can be configured via environment variables:
+- `FLAKY_UP_RATIO`: Percentage of requests that should fail e.g. 0.25 = 25%
+- `FLAKY_WINDOW`: Duration in seconds for the failure rate window
 
-```yaml
-- name: sample body up
-  url: https://dev-sre-take-home-exercise-rubric.us-east-1.recruiting-public.fetchrewards.com/body
-  method: POST
-  headers:
-    content-type: application/json
-  body: '{"foo":"bar"}'
+## Running the Applications
 
-- name: sample index up
-  url: https://dev-sre-take-home-exercise-rubric.us-east-1.recruiting-public.fetchrewards.com/
-
-- name: sample 20%
-  url: http://localhost:8080
+### Using Docker Compose
+All applications can be run together using:
+```bash
+docker-compose up -d
 ```
 
 ## Running the Application
@@ -63,33 +105,26 @@ For example, to use the sample configuration:
 go run main.go sample.yaml
 ```
 
-## Output
+## Viewing Metrics
 
-The application will continuously monitor the specified endpoints and display:
-- Current status (UP/DOWN) for each endpoint
-- Availability percentage for each endpoint
-
-Example output:
-```
-sample 20% is UP
-http://localhost:8080 has 85.000000% availability
-sample 50% is DOWN
-http://localhost:8081 has 45.000000% availability
-```
+Access the report application at http://localhost:5002 to view:
+- Overall uptime percentages
+- Historical health metrics
+- HTTP request patterns
+- Comparison between health checks and actual requests
 
 ## Cleanup
 
-To stop the mock servers:
-
+To stop all services:
 ```bash
 docker-compose down
 ```
 
 ## Notes
 
-- The application considers an endpoint as "UP" if:
+- The monitor application considers an endpoint as "UP" if:
   - The response status code is between 200 and 299
   - The response time is less than 500ms
-  - No errors occurred during the request
-- The monitoring interval is continuous (no sleep between checks)
-- The application uses a 5-second timeout for HTTP requests 
+- Port mappings can be modified in the docker-compose.yml file
+- The mock servers provide a realistic testing environment for the monitoring system
+- Metrics are stored in MongoDB and can be analyzed for patterns and trends 

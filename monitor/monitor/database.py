@@ -1,8 +1,7 @@
 from pymongo import MongoClient
 from pymongo.errors import BulkWriteError
-from mockserver.config import Config
-from typing import List, Dict, Any
-from datetime import datetime
+from monitor.config import Config
+from typing import Dict, Any
 
 
 class Database:
@@ -10,6 +9,7 @@ class Database:
     _client = None
     _db = None
     _buffer = []
+    _buffer_size = 100  # Number of records to buffer before bulk insert
 
     def __new__(cls):
         if cls._instance is None:
@@ -24,8 +24,6 @@ class Database:
                    f"{Config.MONGODB_URI.split('://')[1]}")
             self._client = MongoClient(uri)
             self._db = self._client[Config.MONGODB_DB_NAME]
-        # Number of records to buffer before bulk insert
-        self._buffer_size = int(Config.MONGODB_BUFFER_SIZE)
 
     @property
     def db(self):

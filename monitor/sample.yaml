@@ -1,0 +1,72 @@
+#- body: '{"foo":"bar"}'
+#  headers:
+#    content-type: application/json
+#  method: POST
+#  name: sample body up
+#  url: https://dev-sre-take-home-exercise-rubric.us-east-1.recruiting-public.fetchrewards.com/body
+#- name: sample index up
+#  url: https://dev-sre-take-home-exercise-rubric.us-east-1.recruiting-public.fetchrewards.com/
+#- body: "{}"
+#  headers:
+#    content-type: application/json
+#  method: POST
+#  name: sample body down
+#  url: https://dev-sre-take-home-exercise-rubric.us-east-1.recruiting-public.fetchrewards.com/body
+#- name: sample error down
+#  url: https://dev-sre-take-home-exercise-rubric.us-east-1.recruiting-public.fetchrewards.com/error
+#- name: 5000 - 25% of 60 s.
+#  url: http://localhost:5000
+#  body: '{"pid":"mockserver0"}'
+#  headers:
+#    content-type: application/json
+#  method: POST
+#- name: 5001 - 80% of 60 s.
+#  url: http://localhost:5001
+#  body: '{"pid":"mockserver1"}'
+#  headers:
+#    content-type: application/json
+#  method: POST'
+- name: 5000 - 25% of 60 s. ZERO GET
+  url: http://mockserver0:5000/2
+- name: 5000 - 25% of 60 s. ZERO POST
+  url: http://mockserver0:5000
+  body: '{"pid":"mockserver0"}'
+  headers:
+    content-type: application/json
+  method: POST
+- name: 5001 - 80% of 60 s. ONE POST
+  url: http://mockserver1:5001/2
+  body: '{"pid":"mockserver1"}'
+  headers:
+    content-type: application/json
+  method: POST
+- name: 5001 - 80% of 60 s. ONE GET
+  url: http://mockserver1:5001
+- name: 5003 - 25% of 60 s. TWO GET
+  url: http://mockserver2:5000
+- name: Riki Rose
+  url: http://rikirose.com
+- name: Riki Rose - Admin
+  url: http://rikirose.com/admin-login
+- name: Fix Smart Solutions
+  url: http://fixsmart.solutions
+- name: Fix Smart Solutions - Admin
+  url: http://fixsmart.solutions/wp-admin
+#- name: sample index - 2
+#  url: https://dev-sre-take-home-exercise-rubric.us-east-1.recruiting-public.fetchrewards.com/2
+#- name: sample index - 3
+#  url: https://dev-sre-take-home-exercise-rubric.us-east-1.recruiting-public.fetchrewards.com/3
+#- name: sample index - 4
+#  url: https://dev-sre-take-home-exercise-rubric.us-east-1.recruiting-public.fetchrewards.com/4
+#- name: sample index - 5
+#  url: https://dev-sre-take-home-exercise-rubric.us-east-1.recruiting-public.fetchrewards.com/5
+#- name: sample index - 6
+#  url: https://dev-sre-take-home-exercise-rubric.us-east-1.recruiting-public.fetchrewards.com/6
+#- name: sample index - 7
+#  url: https://dev-sre-take-home-exercise-rubric.us-east-1.recruiting-public.fetchrewards.com/7
+#- name: sample index - 8
+#  url: https://dev-sre-take-home-exercise-rubric.us-east-1.recruiting-public.fetchrewards.com/8
+#- name: sample index - 9
+#  url: https://dev-sre-take-home-exercise-rubric.us-east-1.recruiting-public.fetchrewards.com/9
+#- name: sample index - 10
+#  url: https://dev-sre-take-home-exercise-rubric.us-east-1.recruiting-public.fetchrewards.com/10

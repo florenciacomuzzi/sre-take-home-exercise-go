@@ -1,14 +1,18 @@
-def get_uptime_percentage(pid, start=None, end=None):
+def get_availability_by_server():
     pipeline = [
         {
-            '$match': {
-                'pid': pid,
-                'type': 'response',
-            }
-        }, {
             '$group': {
-                '_id': None,
-                'totalRecords': {
+                '_id': {
+                    'url': '$url',
+                    'domain': '$domain'
+                },
+                'start': {
+                    '$min': '$server_start_ts'
+                },
+                'end': {
+                    '$max': '$timestamp'
+                },
+                'total': {
                     '$sum': 1
                 },
                 'success': {
@@ -16,18 +20,7 @@ def get_uptime_percentage(pid, start=None, end=None):
                         '$cond': [
                             {
                                 '$eq': [
-                                    '$code', 200
-                                ]
-                            }, 1, 0
-                        ]
-                    }
-                },
-                'fail': {
-                    '$sum': {
-                        '$cond': [
-                            {
-                                '$eq': [
-                                    '$code', 500
+                                    '$status', 'success'
                                 ]
                             }, 1, 0
                         ]
@@ -35,63 +28,153 @@ def get_uptime_percentage(pid, start=None, end=None):
                 }
             }
         }, {
+            '$group': {
+                '_id': '$_id.domain',
+                'start': {
+                    '$min': '$start'
+                },
+                'end': {
+                    '$min': '$end'
+                },
+                'total': {
+                    '$sum': '$total'
+                },
+                'success': {
+                    '$sum': '$success'
+                }
+            }
+        }, {
             '$project': {
                 '_id': 0,
-                'totalRecords': 1,
+                'domain': '$_id',
                 'success': 1,
-                'fail': 1,
-                'uptime': {
-                    '$cond': [
-                        {
-                            '$eq': [
-                                '$totalRecords', 0
-                            ]
-                        }, 0, {
-                            '$divide': [
-                                '$success', '$totalRecords'
-                            ]
-                        }
+                'total': 1,
+                'start': 1,
+                'end': 1,
+                'availabilityRatio': {
+                    '$divide': [
+                        '$success', '$total'
+                    ]
+                }
+            }
+        }, {
+            '$addFields': {
+                'availabilityPercentage': {
+                    '$multiply': [
+                        '$availabilityRatio', 100
+                    ]
+                }
+            }
+        }, {
+            '$project': {
+                'availabilityRatio': 0
+            }
+        }
+    ]
+    return pipeline
+
+
+def get_availability_by_domain():
+    """Gets all-time availability  for all domains."""
+    pipeline = [
+        {
+            '$group': {
+                '_id': '$domain',
+                'success': {
+                    '$sum': '$success'
+                },
+                'total': {
+                    '$sum': '$total'
+                },
+                'start': {
+                    '$min': '$start'
+                },
+                'end': {
+                    '$max': '$end'
+                }
+            }
+        }, {
+            '$project': {
+                '_id': 0,
+                'domain': '$_id',
+                'success': 1,
+                'total': 1,
+                'start': 1,
+                'end': 1,
+                'availabilityRatio': {
+                    '$divide': [
+                        '$success', '$total'
                     ]
                 }
             }
         }, {
             '$project': {
                 '_id': 0,
-                'totalRecords': 1,
+                'domain': 1,
                 'success': 1,
-                'fail': 1,
-                'uptime': 1,
-                'uptimePercentage': {
+                'total': 1,
+                'start': 1,
+                'end': 1,
+                'availabilityPercentage': {
                     '$multiply': [
-                        '$uptime', 100
+                        '$availabilityRatio', 100
                     ]
                 }
             }
         }
     ]
-    # TODO validate type of start and end
-    if not start and not end:
-        return pipeline
-    stage = pipeline[0]
-    match = stage['$match']
-    if start:
-        match['timestamp']['$gte'] = start
-    if end:
-        match['timestamp']['$lt'] = end
-    pipeline[0]['$match'] = match
     return pipeline
 
 
-def get_unique_pids():
+def get_availability_by_domain_since(dt):
     pipeline = [
         {
-            '$group': {
-                '_id': '$pid'
+            '$match': {
+                'type': 'response',
+                'timestamp': {
+                    '$gt': dt
+                }
             }
-        },
-        {
-            '$sort': {
-                '_id': 1
+        }, {
+            '$group': {
+                '_id': '$domain',
+                'total': {
+                    '$sum': 1
+                },
+                'success': {
+                    '$sum': {
+                        '$cond': [
+                            {
+                                '$eq': [
+                                    '$status', 'success'
+                                ]
+                            }, 1, 0
+                        ]
+                    }
+                }
+            }
+        }, {
+            '$project': {
+                '_id': 0,
+                'domain': '$_id',
+                'success': '$success',
+                'total': '$total',
+                'availabilityRatio': {
+                    '$divide': [
+                        '$success', '$total'
+                    ]
+                }
+            }
+        }, {
+            '$project': {
+                'domain': 1,
+                'success': 1,
+                'total': 1,
+                'availabilityPercentage': {
+                    '$multiply': [
+                        '$availabilityRatio', 100
+                    ]
+                }
             }
         }
     ]

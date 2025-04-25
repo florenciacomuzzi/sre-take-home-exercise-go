@@ -1,0 +1,27 @@
+# PyKwalify schema for validating a configuration file for this script
+type: seq
+sequence:
+  # this defines each element in the top-level list
+  - type: map
+    mapping:
+      name:
+        type: str
+        required: true
+      url:
+        type: str
+        required: true
+        pattern: "^https?://[\\w.-]+(?:/.*)?$"
+      method:
+        type: str
+        required: false
+        enum: ["GET", "POST", "PUT", "DELETE", "PATCH", "HEAD", "OPTIONS"]
+      headers:
+        type: map
+        required: false
+        mapping:
+          # allow any header key, with string values
+          "regex;(.*)":
+            type: str
+      body:
+        type: str
+        required: false
