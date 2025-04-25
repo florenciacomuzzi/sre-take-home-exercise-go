@@ -29,6 +29,15 @@ The system consists of three main components:
 - Accessible at http://localhost:5002 (configurable in docker-compose.yml)
 - Visualizes both health metrics and HTTP request metrics
 
+#### Report Dashboard Overview
+![Report Dashboard Overview](images/report1.png)
+
+#### Detailed Metrics View
+![Detailed Metrics View](images/report2.png)
+
+#### Historical Data Analysis
+![Historical Data Analysis](images/report3.png)
+
 ## Data Storage
 
 All applications store their data in MongoDB with two main collections:

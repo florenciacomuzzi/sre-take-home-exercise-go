@@ -21,6 +21,17 @@ The application provides a web interface accessible at http://localhost:5002 (co
 - Time-based availability trends
 - Up status
 
+### Screenshots
+
+#### Report Dashboard Overview
+![Report Dashboard Overview](images/report1.png)
+
+#### Detailed Metrics View
+![Detailed Metrics View](images/report2.png)
+
+#### Historical Data Analysis
+![Historical Data Analysis](images/report3.png)
+
 ## Data Sources
 
 The application reads data from two MongoDB collections:
