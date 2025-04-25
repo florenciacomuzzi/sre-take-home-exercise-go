@@ -1,47 +1,52 @@
-# Mock Server
+# MockServer Application
 
-A Flask-based mock server that logs HTTP requests to MongoDB.
+The MockServer application is a Flask service that simulates HTTP endpoints with configurable failure rates. It's designed to help test and validate the monitoring system.
 
-## Setup
+## Features
 
-1. Install dependencies:
-```bash
-pip install -r requirements.txt
-```
+- Simulates HTTP endpoints with configurable failure rates
+- Records all HTTP requests to MongoDB
+- Configurable time windows for failure patterns
+- Simple REST API for status checks
+- Environment variable based configuration
 
- poetry env use python
+## Configuration
 
+The server can be configured using environment variables:
 
-2. Make sure MongoDB is running locally on the default port (27017)
-
-3. Create a `.env` file with your configuration (optional, defaults are provided)
-
-## Running the Server
-
-```bash
-python -m mockserver.app
-```
-
-The server will start on `http://localhost:5000`
-
-## Running Tests
-
-```bash
-pytest
-```
+- `FLAKY_WINDOW`: Window duration in seconds
+- `FLAKY_UP_RATIO`: Percentage of successful requests in 60 
+- `MONGODB_URI`: MongoDB connection string (default: mongodb://localhost:27017)
+- `MONGODB_DB`: Database name (default: monitoring)
 
 ## API Endpoints
 
-### GET /
-Logs a GET request to MongoDB and returns a success response.
+- `GET /`: Returns info about the latest request
 
-### POST /
-Logs a POST request to MongoDB and returns a success response.
+## Data Storage
 
-## MongoDB Structure
+The application stores HTTP request metrics in MongoDB in the `http_metrics` collection. Each metric includes:
+- Request timestamp
+- Request method and path
+- Response status code
 
-Requests are stored in the `requests` collection with the following structure:
-- method: HTTP method (GET/POST)
-- headers: Request headers
-- timestamp: UTC timestamp of the request
-- data: Request body data (for POST requests)
+## Running the Application
+
+### Using Docker Compose
+The application is configured to run as part of the Docker Compose setup with three instances:
+    - Server on port 5000 with 26% failure rate
+    - Server on port 5001 with 50% failure rate
+    - Server on port 5003 with 78% failure rate
+
+### Running Manually
+```bash
+python app.py
+```
+
+## Notes
+
+- The failure rate is calculated for all records i.e. all-time
+- Requests are randomly failed based on the configured percentage
+- All requests are logged to MongoDB for analysis
+- The server is designed to be lightweight and fast
+- Useful for testing the monitoring system's accuracy
