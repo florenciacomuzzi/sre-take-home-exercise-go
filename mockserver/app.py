@@ -23,7 +23,8 @@ def create_app():
 
     pid = os.getenv('PID', f'mockserver{get_uuid(8)}')
 
-    configure_routes(app=app, http_metrics=http_metrics, server_start_ts=datetime.now(timezone.utc), pid=pid)
+    configure_routes(app=app, http_metrics=http_metrics,
+                     server_start_ts=datetime.now(timezone.utc), pid=pid)
     return app
 
 

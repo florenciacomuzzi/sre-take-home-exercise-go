@@ -15,9 +15,10 @@ def random_successful_code():
     """Generate a random successful HTTP status code between 200 and 299."""
     return random.randint(200, 299)
 
+
 def random_error_code():
     """Generate a random HTTP error code (4xx or 5xx).
-    
+
     Returns:
         int: A random HTTP error code from common error codes
     """
@@ -42,8 +43,8 @@ def random_error_code():
     ]
     return random.choice(error_codes)
 
-def configure_routes(*, app, http_metrics, pid, server_start_ts=None):
 
+def configure_routes(*, app, http_metrics, pid, server_start_ts=None):
 
     @app.route('/', methods=['GET', 'POST'])
     def health():
@@ -83,9 +84,11 @@ def configure_routes(*, app, http_metrics, pid, server_start_ts=None):
 
         if phase < up_ratio * window:
             code = random_successful_code()
-            response_data = response_data | {'status': 'success', 'message': 'OK', 'code': code}
+            response_data = response_data | {
+                'status': 'success', 'message': 'OK', 'code': code}
         else:
             code = random_error_code()
-            response_data = response_data | {'status': 'error', 'message': 'FAIL', 'code': code}
+            response_data = response_data | {
+                'status': 'error', 'message': 'FAIL', 'code': code}
         http_metrics.insert_response(response_data)
         return response_data, code
